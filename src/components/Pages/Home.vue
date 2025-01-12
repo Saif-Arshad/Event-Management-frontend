@@ -2,10 +2,23 @@
 
 import { ref, onMounted } from "vue";
 import axios from "axios";
-const loading = ref(false); 
+const loading = ref(false);
+import { useToast } from "vue-toastification";
+
 const events = ref([]); 
+const toast = useToast();
 
+function handleDetailClick(eventId) {
+    const authToken = localStorage.getItem("authToken");
 
+    if (!authToken) {
+      toast.error("Please log in to see event details.");
+      return;
+    }
+
+    window.location.href = `#/events/${eventId}`;
+
+  }
 
 const fetchEvents = async () => {
   loading.value = true;
@@ -87,11 +100,13 @@ onMounted(() => {
 </div>
 <div class="flex items-center justify-end mt-9">
 <a
-  :href="`#/events/${event.event_id}`"
-  class="px-6 py-2 bg-[#FA7D3B] text-white rounded-full hover:bg-[#e77026] transition inline-block text-center "
+  href="#"
+  @click.prevent="handleDetailClick(event.event_id)"
+  class="px-6 py-2 bg-[#FA7D3B] text-white rounded-full hover:bg-[#e77026] transition inline-block text-center"
 >
   Detail
 </a>
+
 </div>
 
 
